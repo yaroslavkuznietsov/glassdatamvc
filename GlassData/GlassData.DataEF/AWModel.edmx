@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="AWModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="AWModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="AWModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="AWModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GlassSet" EntityType="AWModel.Glass" />
+          <EntitySet Name="CustomerSet" EntityType="AWModel.Customer" />
+          <EntitySet Name="OrderSet" EntityType="AWModel.Order" />
+          <AssociationSet Name="CustomerOrder" Association="AWModel.CustomerOrder">
+            <End Role="Customer" EntitySet="CustomerSet" />
+            <End Role="Order" EntitySet="OrderSet" />
+          </AssociationSet>
+          <AssociationSet Name="OrderGlass" Association="AWModel.OrderGlass">
+            <End Role="Order" EntitySet="OrderSet" />
+            <End Role="Glass" EntitySet="GlassSet" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerGlass" Association="AWModel.CustomerGlass">
+            <End Role="Customer" EntitySet="CustomerSet" />
+            <End Role="Glass" EntitySet="GlassSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Glass">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="LinePos" Type="String" Nullable="false" />
+          <Property Name="SourcePos" Type="String" Nullable="false" />
+          <Property Name="SourceSide" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="AWModel.OrderGlass" FromRole="Glass" ToRole="Order" />
+          <NavigationProperty Name="Customer" Relationship="AWModel.CustomerGlass" FromRole="Glass" ToRole="Customer" />
+          <Property Name="GlassId" Type="String" Nullable="false" />
+          <Property Name="GlassHeight" Type="Decimal" Nullable="false" />
+          <Property Name="GlassWidth" Type="Decimal" Nullable="false" />
+          <Property Name="GlassThickness" Type="String" Nullable="false" />
+          <Property Name="GlassWeight" Type="Decimal" Nullable="false" />
+          <Property Name="DestRackPos" Type="String" Nullable="false" />
+          <Property Name="DestRackSide" Type="String" Nullable="false" />
+          <Property Name="PreviousHeight" Type="Decimal" Nullable="false" />
+          <Property Name="PreviousWidth" Type="Decimal" Nullable="false" />
+          <Property Name="GlassResult" Type="String" Nullable="true" />
+          <Property Name="OrderId" Type="Int32" Nullable="true" />
+          <Property Name="CustomerId" Type="Int32" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Order" Relationship="AWModel.CustomerOrder" FromRole="Customer" ToRole="Order" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Glass" Relationship="AWModel.CustomerGlass" FromRole="Customer" ToRole="Glass" />
+          <Property Name="Address" Type="String" Nullable="true" />
+          <Property Name="Phone" Type="String" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="String" Nullable="false" />
+          <Property Name="DateTime" Type="String" Nullable="true" />
+          <Property Name="CustomerID" Type="String" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="AWModel.CustomerOrder" FromRole="Order" ToRole="Customer" />
+          <NavigationProperty Name="Glass" Relationship="AWModel.OrderGlass" FromRole="Order" ToRole="Glass" />
+        </EntityType>
+        <Association Name="CustomerOrder">
+          <End Type="AWModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="AWModel.Order" Role="Order" Multiplicity="*" />
+        </Association>
+        <Association Name="OrderGlass">
+          <End Type="AWModel.Order" Role="Order" Multiplicity="1" />
+          <End Type="AWModel.Glass" Role="Glass" Multiplicity="*" />
+        </Association>
+        <Association Name="CustomerGlass">
+          <End Type="AWModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="AWModel.Glass" Role="Glass" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="AWModel" />
+        <Alias Key="Target" Value="AWModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="AWModelContainer" StorageEntityContainer="AWModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
