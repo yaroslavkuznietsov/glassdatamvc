@@ -48,7 +48,7 @@ namespace GlassData.DataLibrary.Models
 
         [Required]
         [MaxLength(10, ErrorMessage = "Maximal Length is 10")]
-        public string DestRackPos { get; set; }
+        public DestRackPos DestRackPos { get; set; }
 
         [Required]
         public Side DestRackSide { get; set; }

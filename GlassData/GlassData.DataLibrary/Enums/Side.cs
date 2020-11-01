@@ -9,6 +9,8 @@ namespace GlassData.DataLibrary.Enums
 {
     public enum Side
     {
+        [Description("None")]
+        None = 0,
         [Description("1")]
         S1 = 1,
         [Description("2")]
