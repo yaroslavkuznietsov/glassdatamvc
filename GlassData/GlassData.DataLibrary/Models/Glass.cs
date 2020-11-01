@@ -16,12 +16,10 @@ namespace GlassData.DataLibrary.Models
         public DateTime TimeStamp { get; set; } = DateTime.Now;
 
         [Required]
-        [MaxLength(10, ErrorMessage ="Maximal Length is 10")]
-        public string LinePos { get; set; }
+        public LinePos LinePos { get; set; }
 
         [Required]
-        [MaxLength(10, ErrorMessage = "Maximal Length is 10")]
-        public string SourcePos { get; set; }
+        public SourcePos SourcePos { get; set; }
 
         [Required]
         public Side SourceSide { get; set; }
@@ -47,7 +45,6 @@ namespace GlassData.DataLibrary.Models
         public decimal GlassWeight { get; set; }
 
         [Required]
-        [MaxLength(10, ErrorMessage = "Maximal Length is 10")]
         public DestRackPos DestRackPos { get; set; }
 
         [Required]
