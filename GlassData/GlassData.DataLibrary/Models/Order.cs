@@ -9,10 +9,9 @@ namespace GlassData.DataLibrary.Models
 {
     public class Order
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Order()
         {
-            this.Glasses = new HashSet<Glass>();
+            GlassesList = new List<Glass>();
         }
 
         public int Id { get; set; }
@@ -21,10 +20,8 @@ namespace GlassData.DataLibrary.Models
         [MaxLength(50, ErrorMessage = "Maximal Length is 50")]
         public string Number { get; set; }
         public string DateTime { get; set; }
-        public string CustomerID { get; set; }
-
-        public virtual Customer Customer { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Glass> Glasses { get; set; }
+        public Customer Customer { get; set; }
+        public int CustomerId { get; set; }
+        public List<Glass> GlassesList { get; set; }
     }
 }

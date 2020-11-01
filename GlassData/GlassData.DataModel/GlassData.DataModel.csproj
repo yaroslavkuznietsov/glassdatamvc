@@ -51,10 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisconnectedDB.cs" />
     <Compile Include="GlassContext.cs" />
-    <Compile Include="Migrations\202010311730090_Initial.cs" />
-    <Compile Include="Migrations\202010311730090_Initial.designer.cs">
-      <DependentUpon>202010311730090_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202011011652488_Initial.cs" />
+    <Compile Include="Migrations\202011011652488_Initial.designer.cs">
+      <DependentUpon>202011011652488_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,8 +71,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202010311730090_Initial.resx">
-      <DependentUpon>202010311730090_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202011011652488_Initial.resx">
+      <DependentUpon>202011011652488_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

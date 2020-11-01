@@ -10,10 +10,10 @@ namespace GlassData.DataLibrary.Enums
     public enum Result
     {
         [Description("None")]
-        None = 1,
+        None = 0,
         [Description("Done")]
-        Done = 2,
+        Done = 1,
         [Description("Lost")]
-        Lost = 3
+        Lost = 2
     }
 }

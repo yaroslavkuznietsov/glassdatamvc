@@ -52,8 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Line 2.cs" />
+    <Compile Include="Enums\Line.cs" />
     <Compile Include="Enums\Result.cs" />
     <Compile Include="Enums\Side.cs" />
+    <Compile Include="Enums\SourcePos.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Glass.cs" />
     <Compile Include="Models\Glass_Old.cs" />

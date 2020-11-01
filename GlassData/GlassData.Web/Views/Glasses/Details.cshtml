@@ -1,0 +1,146 @@
+﻿@model GlassData.DataLibrary.Models.Glass
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Glass</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Customer.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order.Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeStamp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeStamp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LinePos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinePos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SourcePos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourcePos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceSide)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourceSide)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassHeight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassHeight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassWidth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassWidth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassThickness)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassThickness)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassWeight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassWeight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DestRackPos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DestRackPos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DestRackSide)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DestRackSide)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreviousHeight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PreviousHeight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreviousWidth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PreviousWidth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GlassResult)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GlassResult)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
