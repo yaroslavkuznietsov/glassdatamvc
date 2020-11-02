@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GlassData.DataModel
 {
-    class DisconnectedDB
+    public class DisconnectedRepository
     {
         public void SaveNewGlass(Glass glass)
         {

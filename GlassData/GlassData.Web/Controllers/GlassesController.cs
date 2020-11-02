@@ -13,6 +13,8 @@ namespace GlassData.Web.Controllers
 {
     public class GlassesController : Controller
     {
+        private readonly DisconnectedRepository _repo = new DisconnectedRepository();
+
         private GlassContext db = new GlassContext();
 
         // GET: Glasses
@@ -52,10 +54,22 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,TimeStamp,LinePos,SourcePos,SourceSide,GlassId,GlassHeight,GlassWidth,GlassThickness,GlassWeight,DestRackPos,DestRackSide,PreviousHeight,PreviousWidth,GlassResult,OrderId,CustomerId")] Glass glass)
         {
+            #region EF6 Code
+            //if (ModelState.IsValid)
+            //{
+            //    db.GlassSet.Add(glass);
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+            //return View(glass);
+            #endregion
+
             if (ModelState.IsValid)
             {
-                db.GlassSet.Add(glass);
-                db.SaveChanges();
+                _repo.SaveNewGlass(glass);
                 return RedirectToAction("Index");
             }
 
