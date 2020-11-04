@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -20,9 +21,51 @@ namespace GlassData.Web.Controllers
         // GET: Glasses
         public ActionResult Index()
         {
-            var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+            ViewBag.DateTimeSpanSet = new SelectList(db.DateTimeSpanSet, "Id", "DateStart", "DateEnd");
+
+            DateTime dt1 = DateTime.Now.AddDays(-1);
+            DateTime dt2 = DateTime.Now;
+
+            //var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+            var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order).Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g=>g.TimeStamp);
             return View(glassSet.ToList());
         }
+
+        /// <summary>
+        /// говнокод c попыткой сделать partial view (https://www.c-sharpcorner.com/UploadFile/ff2f08/multiple-models-in-single-view-in-mvc/) 
+        /// в которым есть скрипт с выбором даты и времени (https://www.codeproject.com/Articles/1136464/Simplest-Way-to-Use-JQuery-Date-Picker-and-Date-Ti), 
+        /// но я так понимаю это не правильно. 
+        /// Эти два поля мне нужни здесь в index view чтобы по кнопке Save(submit) передать эти два значения даты и времени 
+        /// в [HTTP Post] ActionResult Index  и и сделать query за выбранный период и снова вывести на view
+        /// по сути мне нужно вызвать этот сценарий и вернуть значения из поля. Или пох как но мне нужно, 
+        /// чтобы вернулись два значения и с ними работать. У самой модели поля нет для этого, 
+        /// как вернуть значения назад мне не хватает знаний пока что :((  подскажи что почитать
+        /// </summary>
+        /// <returns></returns>
+        public PartialViewResult _DateTimeSpan()
+        {
+            DateTimeSpan dts = new DateTimeSpan() { DateStart = DateTime.Now.AddDays(-100), DateEnd = DateTime.Now };
+            return PartialView(db.DateTimeSpanSet.Add(dts));
+        }
+
+        // POST: Glasses/Index
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(DateTime? dt1, DateTime? dt2)
+        {
+
+
+
+            var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+            return View(glassSet.ToList());
+
+        }
+
+
+
+
 
         // GET: Glasses/Details/5
         public ActionResult Details(int? id)

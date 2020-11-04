@@ -1,10 +1,19 @@
-﻿@model IEnumerable<GlassData.DataLibrary.Models.Glass>
+﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
+
+@model IEnumerable<GlassData.DataLibrary.Models.Glass>
 
 @{
     ViewBag.Title = "Index";
+    Html.RenderAction("_DateTimeSpan");
 }
 
 <h2>Index</h2>
+
+@*<div>
+    @Html.Partial("_DateTimeSpan", (object)ViewBag.DateTimeSpanSet)
+</div>*@
+
 
 <p>
     @Html.ActionLink("Create New", "Create")

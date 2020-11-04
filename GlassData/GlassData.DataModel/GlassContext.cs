@@ -15,8 +15,9 @@ namespace GlassData.DataModel
         {
         }
 
-        public virtual DbSet<Glass> GlassSet { get; set; }
-        public virtual DbSet<Customer> CustomerSet { get; set; }
-        public virtual DbSet<Order> OrderSet { get; set; }
+        public DbSet<Glass> GlassSet { get; set; }
+        public DbSet<Customer> CustomerSet { get; set; }
+        public DbSet<Order> OrderSet { get; set; }
+        public DbSet<DateTimeSpan> DateTimeSpanSet { get; set; }
     }
 }
