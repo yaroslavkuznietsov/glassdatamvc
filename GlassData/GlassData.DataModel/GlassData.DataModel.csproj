@@ -53,13 +53,9 @@
   <ItemGroup>
     <Compile Include="DisconnectedRepository.cs" />
     <Compile Include="GlassContext.cs" />
-    <Compile Include="Migrations\202011012022514_Initial.cs" />
-    <Compile Include="Migrations\202011012022514_Initial.designer.cs">
-      <DependentUpon>202011012022514_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202011022109006_DateTimeSpanAdded.cs" />
-    <Compile Include="Migrations\202011022109006_DateTimeSpanAdded.designer.cs">
-      <DependentUpon>202011022109006_DateTimeSpanAdded.cs</DependentUpon>
+    <Compile Include="Migrations\202011221118209_initial.cs" />
+    <Compile Include="Migrations\202011221118209_initial.designer.cs">
+      <DependentUpon>202011221118209_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,11 +71,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202011012022514_Initial.resx">
-      <DependentUpon>202011012022514_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202011022109006_DateTimeSpanAdded.resx">
-      <DependentUpon>202011022109006_DateTimeSpanAdded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202011221118209_initial.resx">
+      <DependentUpon>202011221118209_initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

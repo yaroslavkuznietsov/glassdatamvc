@@ -9,6 +9,8 @@ namespace GlassData.DataLibrary.Enums
 {
     public enum LinePos
     {
+        [Description("L00")]
+        L00 = 100,
         [Description("L01")]
         L01 = 101,
         [Description("L02")]

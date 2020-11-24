@@ -58,7 +58,6 @@
     <Compile Include="Enums\DestRackPos.cs" />
     <Compile Include="Enums\SourcePos.cs" />
     <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\DateTimeSpan.cs" />
     <Compile Include="Models\Glass.cs" />
     <Compile Include="Models\Glass_Old.cs" />
     <Compile Include="Models\Order.cs" />

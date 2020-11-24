@@ -30,25 +30,27 @@ namespace GlassData.DataLibrary.Enums
         //[Description("L10")]
         //L10 = 10,
 
+        [Description("R00")]
+        R00 = 0,
         [Description("R01")]
-        R01 = 101,
+        R01 = 1,
         [Description("R02")]
-        R02 = 102,
+        R02 = 2,
         [Description("R03")]
-        R03 = 103,
+        R03 = 3,
         [Description("R04")]
-        R04 = 104,
+        R04 = 4,
         [Description("R05")]
-        R05 = 105,
+        R05 = 5,
         [Description("R06")]
-        R06 = 106,
+        R06 = 6,
         [Description("R07")]
-        R07 = 107,
+        R07 = 7,
         [Description("R08")]
-        R08 = 108,
+        R08 = 8,
         [Description("R09")]
-        R09 = 109,
+        R09 = 9,
         [Description("R10")]
-        R10 = 110
+        R10 = 10
     }
 }

@@ -7,13 +7,13 @@ namespace GlassData.DataModel.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class DateTimeSpanAdded : IMigrationMetadata
+    public sealed partial class initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DateTimeSpanAdded));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202011022109006_DateTimeSpanAdded"; }
+            get { return "202011221118209_initial"; }
         }
         
         string IMigrationMetadata.Source

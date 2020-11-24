@@ -18,6 +18,5 @@ namespace GlassData.DataModel
         public DbSet<Glass> GlassSet { get; set; }
         public DbSet<Customer> CustomerSet { get; set; }
         public DbSet<Order> OrderSet { get; set; }
-        public DbSet<DateTimeSpan> DateTimeSpanSet { get; set; }
     }
 }

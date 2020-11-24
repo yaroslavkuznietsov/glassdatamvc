@@ -9,6 +9,8 @@ namespace GlassData.DataLibrary.Enums
 {
     public enum SourcePos
     {
+        [Description("L00")]
+        L00 = 100,
         [Description("L01")]
         L01 = 101,
         [Description("L02")]
@@ -30,6 +32,8 @@ namespace GlassData.DataLibrary.Enums
         //[Description("L10")]
         //L10 = 110,
 
+        [Description("R00")]
+        R00 = 0,
         [Description("R01")]
         R01 = 1,
         [Description("R02")]

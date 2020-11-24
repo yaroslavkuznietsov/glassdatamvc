@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using GlassData.DataLibrary.Models;
 using GlassData.DataModel;
+using GlassData.Web.ModelsViewCustom;
 
 namespace GlassData.Web.Controllers
 {
@@ -18,17 +19,18 @@ namespace GlassData.Web.Controllers
 
         private GlassContext db = new GlassContext();
 
+        private MainViewModel mainViewModel = new MainViewModel();
+
         // GET: Glasses
         public ActionResult Index()
         {
-            ViewBag.DateTimeSpanSet = new SelectList(db.DateTimeSpanSet, "Id", "DateStart", "DateEnd");
-
-            DateTime dt1 = DateTime.Now.AddDays(-1);
-            DateTime dt2 = DateTime.Now;
-
-            //var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
-            var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order).Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g=>g.TimeStamp);
-            return View(glassSet.ToList());
+            var glasses = _repo.GetGlassesWithOrderCustomer().OrderByDescending(g => g.TimeStamp).Take(50);
+            mainViewModel.Glasses.Clear();
+            foreach (var item in glasses)
+            {
+                mainViewModel.Glasses.Add(item);
+            }
+            return View(mainViewModel);
         }
 
         /// <summary>
@@ -42,25 +44,65 @@ namespace GlassData.Web.Controllers
         /// как вернуть значения назад мне не хватает знаний пока что :((  подскажи что почитать
         /// </summary>
         /// <returns></returns>
-        public PartialViewResult _DateTimeSpan()
-        {
-            DateTimeSpan dts = new DateTimeSpan() { DateStart = DateTime.Now.AddDays(-100), DateEnd = DateTime.Now };
-            return PartialView(db.DateTimeSpanSet.Add(dts));
-        }
+        //public PartialViewResult _GlassesList()
+        //{
+        //    DateTime dt1 = DateTime.Now.AddDays(-7);
+        //    DateTime dt2 = DateTime.Now;
+        //    var glassSet = _repo.GetGlassesWithOrderCustomer().Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp); 
+        //    return PartialView(glassSet.ToList());
+        //}
+
+        #region _DateTimeSpan
+        //public PartialViewResult _DateTimeSpan(DateTime? dt1, DateTime? dt2)
+        //{
+        //    if (dt1 == null || dt2 == null)
+        //    {
+        //        dt1 = DateTime.Now.AddDays(-3);
+        //        dt2 = DateTime.Now;
+        //    }
+
+        //    mainViewModel.DateTimeSpan.DateStart = dt1;
+        //    mainViewModel.DateTimeSpan.DateStart = dt2;
+
+
+        //    var glasses = _repo.GetGlassesWithOrderCustomer().
+        //            Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).
+        //            OrderBy(g => g.TimeStamp).Take(1000).ToList();
+
+        //    return PartialView(mainViewModel.DateTimeSpan);
+        //} 
+        #endregion
+
 
         // POST: Glasses/Index
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(DateTime? dt1, DateTime? dt2)
+        public ActionResult Index(DataFilterModel dataFilter)
         {
+            DateTime dt1 = (DateTime)dataFilter.DateStart;
+            DateTime dt2 = (DateTime)dataFilter.DateEnd;
 
+            //mainViewModel.DateTimeSpan.DateStart = dt1;
+            //mainViewModel.DateTimeSpan.DateStart = dt2;
 
+            //DateTime dt1 = DateTime.Now.AddDays(-7);
+            //DateTime dt2 = DateTime.Now;
 
-            var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
-            return View(glassSet.ToList());
+            //return PartialView(glassSet.ToList());
 
+            //var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+            //return View(mainViewModel);
+
+            var glasses = db.GlassSet.Include(g => g.Customer).Include(g => g.Order).Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
+            mainViewModel.Glasses.Clear();
+            foreach (var item in glasses)
+            {
+                mainViewModel.Glasses.Add(item);
+            }
+            int n = mainViewModel.Glasses.Count();
+            return View(mainViewModel);
         }
 
 
@@ -181,6 +223,29 @@ namespace GlassData.Web.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        public ActionResult IndexGlassView()
+        {
+
+            DateTime dt1 = DateTime.Now.AddDays(-1);
+            DateTime dt2 = DateTime.Now;
+
+
+
+            ////var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+            //gv.db.GlassSet.Include(g => g.Customer).Include(g => g.Order);  //.Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
+
+            //gv.dts.DateStart = DateTime.Now.AddDays(-1);
+            //gv.dts.DateEnd = DateTime.Now;
+
+            return View();
+        }
+
+
+
+
+
 
         protected override void Dispose(bool disposing)
         {
