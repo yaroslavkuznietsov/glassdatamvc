@@ -30,6 +30,7 @@ namespace GlassData.Web.Controllers
             {
                 mainViewModel.Glasses.Add(item);
             }
+            mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
             return View(mainViewModel);
         }
 
@@ -101,7 +102,7 @@ namespace GlassData.Web.Controllers
             {
                 mainViewModel.Glasses.Add(item);
             }
-            int n = mainViewModel.Glasses.Count();
+            mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
             return View(mainViewModel);
         }
 
