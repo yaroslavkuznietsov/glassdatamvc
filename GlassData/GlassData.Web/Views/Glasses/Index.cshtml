@@ -1,4 +1,7 @@
-﻿@System.Globalization.CultureInfo.CurrentUICulture
+﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
+
+@System.Globalization.CultureInfo.CurrentUICulture
 
 @model GlassData.Web.ModelsViewCustom.MainViewModel
 
@@ -37,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DataFilter.Count, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.DataFilter.Count, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.DataFilter.Count, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
         </div>
 

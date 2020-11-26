@@ -17,9 +17,9 @@ namespace GlassData.Web.Controllers
     {
         private readonly DisconnectedRepository _repo = new DisconnectedRepository();
 
-        private GlassContext db = new GlassContext();
+        private readonly GlassContext db = new GlassContext();
 
-        private MainViewModel mainViewModel = new MainViewModel();
+        private readonly MainViewModel mainViewModel = new MainViewModel();
 
         // GET: Glasses
         public ActionResult Index()
