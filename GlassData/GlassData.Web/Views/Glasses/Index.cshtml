@@ -1,5 +1,4 @@
-﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
+﻿@System.Globalization.CultureInfo.CurrentUICulture
 
 @model GlassData.Web.ModelsViewCustom.MainViewModel
 
@@ -13,47 +12,47 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>DataFilter</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @*@Html.HiddenFor(model => model.Id)*@
+    <div class="form-horizontal">
+        <h4>DataFilter</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.Id)*@
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DataFilter.DateStart, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DataFilter.DateStart, new { htmlAttributes = new { @class = "form-control date-time-picker", onkeydown = "return false", onpaste = "return false" } }) @*new { htmlAttributes = new { @class = "form-control" } })*@
-            @Html.ValidationMessageFor(model => model.DataFilter.DateStart, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataFilter.DateStart, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DataFilter.DateStart, new { htmlAttributes = new { @class = "form-control date-time-picker", onkeydown = "return false", onpaste = "return false" } }) @*new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.DataFilter.DateStart, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DataFilter.DateEnd, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DataFilter.DateEnd, new { htmlAttributes = new { @class = "form-control date-time-picker", onkeydown = "return false", onpaste = "return false" } }) @*new { htmlAttributes = new { @class = "form-control" } })*@
-            @Html.ValidationMessageFor(model => model.DataFilter.DateEnd, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataFilter.DateEnd, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DataFilter.DateEnd, new { htmlAttributes = new { @class = "form-control date-time-picker", onkeydown = "return false", onpaste = "return false" } }) @*new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.DataFilter.DateEnd, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DataFilter.Count, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DisplayFor(model => model.DataFilter.Count, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataFilter.Count, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.DataFilter.Count, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
         </div>
-    </div>
 
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Request" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Request" class="btn btn-default" />
+            </div>
         </div>
+
+
     </div>
-
-
-</div>
 }
 
-@Html.Partial("_GlassesList", Model.Glasses);
+@Html.Partial("_GlassesList", Model.Glasses)
 
 
 @section Scripts {

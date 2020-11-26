@@ -24,7 +24,7 @@ namespace GlassData.Web.Controllers
         // GET: Glasses
         public ActionResult Index()
         {
-            var glasses = _repo.GetGlassesWithOrderCustomer().OrderByDescending(g => g.TimeStamp).Take(50);
+            var glasses = _repo.GetGlassesWithOrder().OrderByDescending(g => g.TimeStamp).Take(100);
             mainViewModel.Glasses.Clear();
             foreach (var item in glasses)
             {
@@ -85,18 +85,7 @@ namespace GlassData.Web.Controllers
             DateTime dt1 = (DateTime)dataFilter.DateStart;
             DateTime dt2 = (DateTime)dataFilter.DateEnd;
 
-            //mainViewModel.DateTimeSpan.DateStart = dt1;
-            //mainViewModel.DateTimeSpan.DateStart = dt2;
-
-            //DateTime dt1 = DateTime.Now.AddDays(-7);
-            //DateTime dt2 = DateTime.Now;
-
-            //return PartialView(glassSet.ToList());
-
-            //var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
-            //return View(mainViewModel);
-
-            var glasses = db.GlassSet.Include(g => g.Customer).Include(g => g.Order).Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
+            var glasses = _repo.GetGlassesWithOrder().Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
             mainViewModel.Glasses.Clear();
             foreach (var item in glasses)
             {
@@ -107,23 +96,34 @@ namespace GlassData.Web.Controllers
         }
 
 
-
-
-
         // GET: Glasses/Details/5
         public ActionResult Details(int? id)
         {
+            #region EF6 Code
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Glass glass = db.GlassSet.Find(id);
+            //if (glass == null)
+            //{
+            //    return HttpNotFound();
+            //} 
+            //return View(glass);
+            #endregion
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Glass glass = db.GlassSet.Find(id);
+            var glass = _repo.GetGlassWithOrderCustomer(id.Value);
             if (glass == null)
             {
                 return HttpNotFound();
             }
             return View(glass);
         }
+
 
         // GET: Glasses/Create
         public ActionResult Create()
@@ -153,6 +153,11 @@ namespace GlassData.Web.Controllers
             //return View(glass);
             #endregion
 
+            if (glass.TimeStamp == DateTime.MinValue)
+            {
+                glass.TimeStamp = DateTime.Now;
+            }
+
             if (ModelState.IsValid)
             {
                 _repo.SaveNewGlass(glass);
@@ -161,8 +166,10 @@ namespace GlassData.Web.Controllers
 
             ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
             ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+
             return View(glass);
         }
+
 
         // GET: Glasses/Edit/5
         public ActionResult Edit(int? id)
@@ -171,15 +178,17 @@ namespace GlassData.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Glass glass = db.GlassSet.Find(id);
+            Glass glass = _repo.GetGlassWithOrderCustomer(id.Value);
             if (glass == null)
             {
                 return HttpNotFound();
             }
             ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
             ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+
             return View(glass);
         }
+
 
         // POST: Glasses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -188,14 +197,26 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,TimeStamp,LinePos,SourcePos,SourceSide,GlassId,GlassHeight,GlassWidth,GlassThickness,GlassWeight,DestRackPos,DestRackSide,PreviousHeight,PreviousWidth,GlassResult,OrderId,CustomerId")] Glass glass)
         {
+            #region EF6 Code
+            //if (ModelState.IsValid)
+            //{
+            //    db.Entry(glass).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+            //return View(glass); 
+            #endregion
+
             if (ModelState.IsValid)
             {
-                db.Entry(glass).State = EntityState.Modified;
-                db.SaveChanges();
+                _repo.SaveUpdatedGlass(glass);
                 return RedirectToAction("Index");
             }
             ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
             ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+
             return View(glass);
         }
 
@@ -206,7 +227,7 @@ namespace GlassData.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Glass glass = db.GlassSet.Find(id);
+            Glass glass = _repo.GetGlassById(id.Value);
             if (glass == null)
             {
                 return HttpNotFound();
@@ -219,33 +240,16 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Glass glass = db.GlassSet.Find(id);
-            db.GlassSet.Remove(glass);
-            db.SaveChanges();
+            #region MyRegion
+            //Glass glass = db.GlassSet.Find(id);
+            //db.GlassSet.Remove(glass);
+            //db.SaveChanges();
+            //return RedirectToAction("Index"); 
+            #endregion
+
+            _repo.DeleteGlass(id);
             return RedirectToAction("Index");
         }
-
-
-        public ActionResult IndexGlassView()
-        {
-
-            DateTime dt1 = DateTime.Now.AddDays(-1);
-            DateTime dt2 = DateTime.Now;
-
-
-
-            ////var glassSet = db.GlassSet.Include(g => g.Customer).Include(g => g.Order);
-            //gv.db.GlassSet.Include(g => g.Customer).Include(g => g.Order);  //.Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
-
-            //gv.dts.DateStart = DateTime.Now.AddDays(-1);
-            //gv.dts.DateEnd = DateTime.Now;
-
-            return View();
-        }
-
-
-
-
 
 
         protected override void Dispose(bool disposing)

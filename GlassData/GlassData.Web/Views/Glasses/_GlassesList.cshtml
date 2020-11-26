@@ -5,9 +5,9 @@
 </p>
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Customer.Name)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Order.Number)
         </th>
@@ -56,62 +56,63 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Customer.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Order.Number)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeStamp)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LinePos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SourcePos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SourceSide)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassHeight)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassWidth)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassThickness)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassWeight)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DestRackPos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DestRackSide)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PreviousHeight)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PreviousWidth)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GlassResult)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeStamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LinePos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourcePos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceSide)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassHeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassWidth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassThickness)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestRackPos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestRackSide)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousHeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousWidth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GlassResult)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

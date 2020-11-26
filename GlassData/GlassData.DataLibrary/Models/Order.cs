@@ -18,6 +18,7 @@ namespace GlassData.DataLibrary.Models
 
         [Required]
         [MaxLength(50, ErrorMessage = "Maximal Length is 50")]
+        [Display(Name = "Order Nr.")]
         public string Number { get; set; }
         public string DateTime { get; set; }
         public Customer Customer { get; set; }

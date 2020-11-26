@@ -13,7 +13,10 @@ namespace GlassData.DataLibrary.Models
     {
         public int Id { get; set; }
 
-        public DateTime TimeStamp { get; set; } = DateTime.Now;
+        //[DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{yyyy/MM/dd 0:HH:mm:ss}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{yyyy/MM/dd, HH:mm:ss}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime TimeStamp { get; set; }
 
         [Required]
         public LinePos LinePos { get; set; }
