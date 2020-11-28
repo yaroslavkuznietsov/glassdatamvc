@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace GlassData.DataModel
 {
@@ -101,6 +102,24 @@ namespace GlassData.DataModel
                 var glass = context.GlassSet.Find(glassId);
                 context.Entry(glass).State = EntityState.Deleted;
                 context.SaveChanges();
+            }
+        }
+
+        public IEnumerable GetCustomerList()
+        {
+            using (var context = new GlassContext())
+            {
+                return context.CustomerSet.AsNoTracking().OrderBy(c => c.Name)
+                  .Select(c => new { c.Id, c.Name, c.Address, c.Phone, c.OrdersList, c.GlassesList }).ToList();
+            }
+        }
+
+        public IEnumerable GetOrderList()
+        {
+            using (var context = new GlassContext())
+            {
+                return context.OrderSet.AsNoTracking().OrderBy(o => o.Number)
+                  .Select(o => new { o.Id, o.Number, o.DateTime, o.Customer, o.CustomerId,  }).ToList();
             }
         }
     }

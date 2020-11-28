@@ -19,62 +19,26 @@ namespace GlassData.Web.Controllers
 
         private readonly GlassContext db = new GlassContext();
 
-        private readonly MainViewModel mainViewModel = new MainViewModel();
+        private MainViewModel mainViewModel = new MainViewModel();
+
 
         // GET: Glasses
         public ActionResult Index()
         {
-            var glasses = _repo.GetGlassesWithOrder().OrderByDescending(g => g.TimeStamp).Take(100);
-            mainViewModel.Glasses.Clear();
-            foreach (var item in glasses)
+            if (mainViewModel.Glasses.Count == 0)
             {
-                mainViewModel.Glasses.Add(item);
+                var glasses = _repo.GetGlassesWithOrder().OrderByDescending(g => g.TimeStamp).Take(100);
+                mainViewModel.Glasses.Clear();
+                foreach (var item in glasses)
+                {
+                    mainViewModel.Glasses.Add(item);
+                } 
             }
             mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
             return View(mainViewModel);
         }
 
-        /// <summary>
-        /// говнокод c попыткой сделать partial view (https://www.c-sharpcorner.com/UploadFile/ff2f08/multiple-models-in-single-view-in-mvc/) 
-        /// в которым есть скрипт с выбором даты и времени (https://www.codeproject.com/Articles/1136464/Simplest-Way-to-Use-JQuery-Date-Picker-and-Date-Ti), 
-        /// но я так понимаю это не правильно. 
-        /// Эти два поля мне нужни здесь в index view чтобы по кнопке Save(submit) передать эти два значения даты и времени 
-        /// в [HTTP Post] ActionResult Index  и и сделать query за выбранный период и снова вывести на view
-        /// по сути мне нужно вызвать этот сценарий и вернуть значения из поля. Или пох как но мне нужно, 
-        /// чтобы вернулись два значения и с ними работать. У самой модели поля нет для этого, 
-        /// как вернуть значения назад мне не хватает знаний пока что :((  подскажи что почитать
-        /// </summary>
-        /// <returns></returns>
-        //public PartialViewResult _GlassesList()
-        //{
-        //    DateTime dt1 = DateTime.Now.AddDays(-7);
-        //    DateTime dt2 = DateTime.Now;
-        //    var glassSet = _repo.GetGlassesWithOrderCustomer().Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp); 
-        //    return PartialView(glassSet.ToList());
-        //}
-
-        #region _DateTimeSpan
-        //public PartialViewResult _DateTimeSpan(DateTime? dt1, DateTime? dt2)
-        //{
-        //    if (dt1 == null || dt2 == null)
-        //    {
-        //        dt1 = DateTime.Now.AddDays(-3);
-        //        dt2 = DateTime.Now;
-        //    }
-
-        //    mainViewModel.DateTimeSpan.DateStart = dt1;
-        //    mainViewModel.DateTimeSpan.DateStart = dt2;
-
-
-        //    var glasses = _repo.GetGlassesWithOrderCustomer().
-        //            Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).
-        //            OrderBy(g => g.TimeStamp).Take(1000).ToList();
-
-        //    return PartialView(mainViewModel.DateTimeSpan);
-        //} 
-        #endregion
-
-
+                
         // POST: Glasses/Index
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -82,15 +46,29 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(DataFilterModel dataFilter)
         {
+            if (dataFilter.DateStart == DateTime.MinValue || dataFilter.DateStart == null)
+            {
+                dataFilter.DateStart = DateTime.Now.AddDays(-5);
+            }
+
+            if (dataFilter.DateEnd == DateTime.MinValue || dataFilter.DateEnd == null)
+            {
+                dataFilter.DateEnd = DateTime.Now;
+            }
+
             DateTime dt1 = (DateTime)dataFilter.DateStart;
             DateTime dt2 = (DateTime)dataFilter.DateEnd;
 
             var glasses = _repo.GetGlassesWithOrder().Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
             mainViewModel.Glasses.Clear();
+            
             foreach (var item in glasses)
             {
                 mainViewModel.Glasses.Add(item);
             }
+
+            mainViewModel.DataFilter.DateStart = dt1;
+            mainViewModel.DataFilter.DateEnd = dt2;
             mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
             return View(mainViewModel);
         }
@@ -128,8 +106,13 @@ namespace GlassData.Web.Controllers
         // GET: Glasses/Create
         public ActionResult Create()
         {
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name");
-            ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number");
+            #region EF6 Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name");
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number"); 
+            #endregion
+
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name"); //, "Address", "Phone", "OrdersList", "GlassesList"
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number"); //, "DateTime", "Customer", "CustomerId", "GlassesList"
             return View();
         }
 
@@ -164,8 +147,14 @@ namespace GlassData.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+            #region EF& Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
+            #endregion
+
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+
 
             return View(glass);
         }
@@ -183,8 +172,14 @@ namespace GlassData.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+
+            #region EF6 Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
+            #endregion
+
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
 
             return View(glass);
         }
@@ -214,8 +209,14 @@ namespace GlassData.Web.Controllers
                 _repo.SaveUpdatedGlass(glass);
                 return RedirectToAction("Index");
             }
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId);
+
+            #region EF6 Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", glass.CustomerId);
+            //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
+            #endregion
+
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
 
             return View(glass);
         }
@@ -240,7 +241,7 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            #region MyRegion
+            #region EF6 Code
             //Glass glass = db.GlassSet.Find(id);
             //db.GlassSet.Remove(glass);
             //db.SaveChanges();
@@ -254,10 +255,14 @@ namespace GlassData.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    #region EF6 Code
+            //    //db.Dispose(); 
+            //    #endregion
+
+            //    //_repo.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
