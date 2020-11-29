@@ -12,6 +12,13 @@ namespace GlassData.DataModel
 {
     public class DisconnectedRepository
     {
+        /// <summary>
+        /// Glass
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public List<Glass> GetQueryableGlassWithOrderCustomer(string query, int page, int pageSize)
         {
             using (var context = new GlassContext())
@@ -37,7 +44,8 @@ namespace GlassData.DataModel
             using (var context = new GlassContext())
             {
                 //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
-                return context.GlassSet.AsNoTracking().Include(g => g.Order).ToList();
+                return context.GlassSet.AsNoTracking()
+                    .Include(g => g.Order).ToList();
             }
         }
 
@@ -46,7 +54,8 @@ namespace GlassData.DataModel
             using (var context = new GlassContext())
             {
                 //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
-                return context.GlassSet.AsNoTracking().Include(g => g.Customer).ToList();
+                return context.GlassSet.AsNoTracking()
+                    .Include(g => g.Customer).ToList();
             }
         }
 
@@ -55,7 +64,9 @@ namespace GlassData.DataModel
             using (var context = new GlassContext())
             {
                 //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
-                return context.GlassSet.AsNoTracking().Include(g => g.Customer).Include(g => g.Order).ToList();
+                return context.GlassSet.AsNoTracking()
+                    .Include(g => g.Customer)
+                    .Include(g => g.Order).ToList();
             }
         }
 
@@ -63,7 +74,10 @@ namespace GlassData.DataModel
         {
             using (var context = new GlassContext())
             {
-                return context.GlassSet.AsNoTracking().Include(g => g.Customer).Include(g => g.Order).FirstOrDefault(g => g.Id == id);
+                return context.GlassSet.AsNoTracking()
+                    .Include(g => g.Customer)
+                    .Include(g => g.Order)
+                    .FirstOrDefault(g => g.Id == id);
             }
         }
 
@@ -109,8 +123,9 @@ namespace GlassData.DataModel
         {
             using (var context = new GlassContext())
             {
-                return context.CustomerSet.AsNoTracking().OrderBy(c => c.Name)
-                  .Select(c => new { c.Id, c.Name, c.Address, c.Phone, c.OrdersList, c.GlassesList }).ToList();
+                return context.CustomerSet.AsNoTracking()
+                    .OrderBy(c => c.Name)
+                    .Select(c => new { c.Id, c.Name }).ToList();  //, c.Address, c.Phone, c.OrdersList, c.GlassesList
             }
         }
 
@@ -118,8 +133,71 @@ namespace GlassData.DataModel
         {
             using (var context = new GlassContext())
             {
-                return context.OrderSet.AsNoTracking().OrderBy(o => o.Number)
-                  .Select(o => new { o.Id, o.Number, o.DateTime, o.Customer, o.CustomerId,  }).ToList();
+                return context.OrderSet.AsNoTracking()
+                    .OrderBy(o => o.Number)
+                    .Select(o => new { o.Id, o.Number }).ToList();    //, o.DateTime, o.Customer, o.CustomerId
+            }
+        }
+
+
+        /// <summary>
+        /// Customer
+        /// </summary>
+        /// <returns></returns>
+        public List<Customer> GetCustomersWithOrders()
+        {
+            using (var context = new GlassContext())
+            {
+                //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
+                return context.CustomerSet.AsNoTracking()
+                    .OrderBy(c => c.Name)
+                    .Include(c => c.OrdersList).ToList();
+            }
+        }
+
+        public Customer GetCustomerWithOrders(int id)
+        {
+            using (var context = new GlassContext())
+            {
+                return context.CustomerSet.AsNoTracking().Include(c => c.OrdersList)
+                  .FirstOrDefault(n => n.Id == id);
+            }
+        }
+
+        public void SaveUpdatedCustomer (Customer customer)
+        {
+            using (var context = new GlassContext())
+            {
+                context.Entry(customer).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void SaveNewCustomer(Customer customer)
+        {
+            using (var context = new GlassContext())
+            {
+                context.CustomerSet.Add(customer);
+                context.SaveChanges();
+            }
+        }
+
+        public Customer GetCustomerById(int id)
+        {
+            using (var context = new GlassContext())
+            {
+                return context.CustomerSet.Find(id);
+                // return context.CustomerSet.AsNoTracking().SingleOrDefault(n => n.Id == id);
+            }
+        }
+
+        public void DeleteCustomer(int customerId)
+        {
+            using (var context = new GlassContext())
+            {
+                var customer = context.CustomerSet.Find(customerId);
+                context.Entry(customer).State = EntityState.Deleted;
+                context.SaveChanges();
             }
         }
     }

@@ -1,15 +1,17 @@
 ﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 <link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
 
-@System.Globalization.CultureInfo.CurrentUICulture
+@*@System.Globalization.CultureInfo.CurrentUICulture*@
 
-@model GlassData.Web.ModelsViewCustom.MainViewModel
+@model GlassData.Web.ViewModels.GlassesViewModel
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
+
+<li>@Html.ActionLink("Customers", "Index", "Customers")</li>
 
 @using (Html.BeginForm())
 {

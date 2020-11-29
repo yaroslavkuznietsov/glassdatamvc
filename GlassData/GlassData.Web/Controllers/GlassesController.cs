@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using GlassData.DataLibrary.Models;
 using GlassData.DataModel;
-using GlassData.Web.ModelsViewCustom;
+using GlassData.Web.ViewModels;
 
 namespace GlassData.Web.Controllers
 {
@@ -17,25 +17,26 @@ namespace GlassData.Web.Controllers
     {
         private readonly DisconnectedRepository _repo = new DisconnectedRepository();
 
-        private readonly GlassContext db = new GlassContext();
+        //private readonly GlassContext db = new GlassContext();
 
-        private MainViewModel mainViewModel = new MainViewModel();
+        private GlassesViewModel glassesViewModel = new GlassesViewModel();
 
 
         // GET: Glasses
         public ActionResult Index()
         {
-            if (mainViewModel.Glasses.Count == 0)
+            if (glassesViewModel.Glasses.Count == 0)
             {
-                var glasses = _repo.GetGlassesWithOrder().OrderByDescending(g => g.TimeStamp).Take(100);
-                mainViewModel.Glasses.Clear();
+                var glasses = _repo.GetGlassesWithOrder()
+                    .OrderByDescending(g => g.TimeStamp).Take(100);
+                glassesViewModel.Glasses.Clear();
                 foreach (var item in glasses)
                 {
-                    mainViewModel.Glasses.Add(item);
+                    glassesViewModel.Glasses.Add(item);
                 } 
             }
-            mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
-            return View(mainViewModel);
+            glassesViewModel.DataFilter.Count = glassesViewModel.Glasses.Count();
+            return View(glassesViewModel);
         }
 
                 
@@ -50,27 +51,24 @@ namespace GlassData.Web.Controllers
             {
                 dataFilter.DateStart = DateTime.Now.AddDays(-5);
             }
-
             if (dataFilter.DateEnd == DateTime.MinValue || dataFilter.DateEnd == null)
             {
                 dataFilter.DateEnd = DateTime.Now;
             }
-
             DateTime dt1 = (DateTime)dataFilter.DateStart;
             DateTime dt2 = (DateTime)dataFilter.DateEnd;
-
-            var glasses = _repo.GetGlassesWithOrder().Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2).OrderBy(g => g.TimeStamp);
-            mainViewModel.Glasses.Clear();
-            
+            var glasses = _repo.GetGlassesWithOrder()
+                .Where(g => g.TimeStamp >= dt1 && g.TimeStamp <= dt2)
+                .OrderBy(g => g.TimeStamp);
+            glassesViewModel.Glasses.Clear();
             foreach (var item in glasses)
             {
-                mainViewModel.Glasses.Add(item);
+                glassesViewModel.Glasses.Add(item);
             }
-
-            mainViewModel.DataFilter.DateStart = dt1;
-            mainViewModel.DataFilter.DateEnd = dt2;
-            mainViewModel.DataFilter.Count = mainViewModel.Glasses.Count();
-            return View(mainViewModel);
+            glassesViewModel.DataFilter.DateStart = dt1;
+            glassesViewModel.DataFilter.DateEnd = dt2;
+            glassesViewModel.DataFilter.Count = glassesViewModel.Glasses.Count();
+            return View(glassesViewModel);
         }
 
 
@@ -140,7 +138,6 @@ namespace GlassData.Web.Controllers
             {
                 glass.TimeStamp = DateTime.Now;
             }
-
             if (ModelState.IsValid)
             {
                 _repo.SaveNewGlass(glass);
@@ -153,9 +150,7 @@ namespace GlassData.Web.Controllers
             #endregion
 
             ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
-
-
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
             return View(glass);
         }
 
@@ -179,7 +174,7 @@ namespace GlassData.Web.Controllers
             #endregion
 
             ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
 
             return View(glass);
         }
@@ -216,7 +211,7 @@ namespace GlassData.Web.Controllers
             #endregion
 
             ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.CustomerId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
 
             return View(glass);
         }

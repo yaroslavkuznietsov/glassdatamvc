@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GlassData.Web.ModelsViewCustom
+namespace GlassData.Web.ViewModels
 {
     public class DataFilterModel
     {
