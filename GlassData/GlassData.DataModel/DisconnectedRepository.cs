@@ -200,5 +200,32 @@ namespace GlassData.DataModel
                 context.SaveChanges();
             }
         }
+
+
+        /// <summary>
+        /// Order
+        /// </summary>
+        /// <returns></returns>
+        public List<Order> GetOrdersWithCustomers()
+        {
+            using (var context = new GlassContext())
+            {
+                //return context.GlassSet..OrderBy(o => o.Number).Include(o => o.Customer).Include(o => o.GlassesList).ToList();
+                return context.OrderSet.AsNoTracking()
+                    .OrderBy(o => o.Number)
+                    .Include(o => o.Customer)
+                    .Include(o => o.GlassesList).ToList();
+            }
+        }
+
+        public void SaveNewOrder(Order order)   //, int customerId
+        {
+            using (var context = new GlassContext())
+            {
+                context.OrderSet.Add(order);
+                context.SaveChanges();
+            }
+        }
+
     }
 }

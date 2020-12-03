@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using GlassData.DataLibrary.Models;
 using GlassData.DataModel;
+using GlassData.Web.ViewModels;
 
 namespace GlassData.Web.Controllers
 {
@@ -15,11 +16,20 @@ namespace GlassData.Web.Controllers
     {
         private GlassContext db = new GlassContext();
 
+        private DisconnectedRepository _repo = new DisconnectedRepository();
+
+        private OrdersViewModel ordersViewModel = new OrdersViewModel();
+
         // GET: Orders
         public ActionResult Index()
         {
-            var orderSet = db.OrderSet.Include(o => o.Customer);
-            return View(orderSet.ToList());
+            #region EF6 Code
+            //var orderSet = db.OrderSet.Include(o => o.Customer);
+            //return View(orderSet.ToList()); 
+            #endregion
+
+            var orders = _repo.GetOrdersWithCustomers();
+            return View(orders);
         }
 
         // GET: Orders/Details/5
@@ -38,10 +48,19 @@ namespace GlassData.Web.Controllers
         }
 
         // GET: Orders/Create
-        public ActionResult Create()
+        public ActionResult Create(int customerId, string customerName)
         {
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name");
+            ViewBag.CustomerId = customerId;
+            ViewBag.CustomerName = customerName;
+
+            
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", customerId);
+
+            #region EF6 Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name"); 
+            #endregion
             return View();
+
         }
 
         // POST: Orders/Create
@@ -51,15 +70,26 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Number,DateTime,CustomerId")] Order order)
         {
+            #region EF6 Code
+            //if (ModelState.IsValid)
+            //{
+            //    db.OrderSet.Add(order);
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId);
+            //return View(order); 
+            #endregion
+
             if (ModelState.IsValid)
             {
-                db.OrderSet.Add(order);
-                db.SaveChanges();
+                _repo.SaveNewOrder(order);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId);
-            return View(order);
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
+            return View(order); 
         }
 
         // GET: Orders/Edit/5
