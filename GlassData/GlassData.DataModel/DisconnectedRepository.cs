@@ -227,5 +227,52 @@ namespace GlassData.DataModel
             }
         }
 
+        public void SaveUpdatedOrder(Order order)
+        {
+            using (var context = new GlassContext())
+            {
+                context.Entry(order).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public Order GetOrderWithCustomer(int id)
+        {
+            using (var context = new GlassContext())
+            {
+                return context.OrderSet.AsNoTracking()
+                    .Include(o => o.Customer)
+                    .FirstOrDefault(o => o.Id == id);
+            }
+        }
+
+        public Order GetOrderById(int id)
+        {
+            using (var context = new GlassContext())
+            {
+                return context.OrderSet.Find(id);
+            }
+        }
+
+        //public Order GetOrderById(int id)
+        //{
+        //    using (var context = new GlassContext())
+        //    {
+        //        Order order = context.OrderSet.Find(id);
+        //        Customer customer = GetCustomerById(order.CustomerId);
+        //        order.Customer = customer;
+        //        return order;
+        //    }
+        //}
+
+        public void DeleteOrder(int orderId)
+        {
+            using (var context = new GlassContext())
+            {
+                var order = context.OrderSet.Find(orderId);
+                context.Entry(order).State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+        }
     }
 }

@@ -35,11 +35,24 @@ namespace GlassData.Web.Controllers
         // GET: Orders/Details/5
         public ActionResult Details(int? id)
         {
+            #region EF6 Code
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Order order = db.OrderSet.Find(id);
+            //if (order == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(order); 
+            #endregion
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.OrderSet.Find(id);
+            Order order = _repo.GetOrderWithCustomer(id.Value);
             if (order == null)
             {
                 return HttpNotFound();
@@ -85,26 +98,34 @@ namespace GlassData.Web.Controllers
             if (ModelState.IsValid)
             {
                 _repo.SaveNewOrder(order);
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return RedirectToAction("Edit", "Customers", new { id = order.CustomerId });
             }
 
             ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
-            return View(order); 
+            return View(order);
         }
 
         // GET: Orders/Edit/5
         public ActionResult Edit(int? id)
         {
+            ViewBag.PreviousUrl = System.Web.HttpContext.Current.Request.UrlReferrer;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.OrderSet.Find(id);
+            #region ÊF6 Code
+            //Order order = db.OrderSet.Find(id); 
+            #endregion
+            var order = _repo.GetOrderById(id.Value);
             if (order == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId);
+            #region EF6 Code
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId); 
+            #endregion
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
             return View(order);
         }
 
@@ -115,24 +136,51 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Number,DateTime,CustomerId")] Order order)
         {
+            #region EF6 Code
+            //if (ModelState.IsValid)
+            //{
+            //    db.Entry(order).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+            //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId); 
+            #endregion
+
+            if (ViewBag.PreviousUrl != null)
+            {
+                string x = ViewBag.PreviousUrl;
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(order).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                _repo.SaveUpdatedOrder(order);
             }
-            ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId);
-            return View(order);
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
+            //return View(order);
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         // GET: Orders/Delete/5
         public ActionResult Delete(int? id)
         {
+            #region EF6 Code
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+            //Order order = db.OrderSet.Find(id);
+            //if (order == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View(order); 
+            #endregion
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.OrderSet.Find(id);
+            Order order = _repo.GetOrderById(id.Value);
             if (order == null)
             {
                 return HttpNotFound();
@@ -145,10 +193,16 @@ namespace GlassData.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Order order = db.OrderSet.Find(id);
-            db.OrderSet.Remove(order);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            #region EF6 Code
+            //Order order = db.OrderSet.Find(id);
+            //db.OrderSet.Remove(order);
+            //db.SaveChanges();
+            //return RedirectToAction("Index"); 
+            #endregion
+
+            Order order = _repo.GetOrderById(id);
+            _repo.DeleteOrder(id);
+            return RedirectToAction("Edit", "Customers", new { id = order.CustomerId });
         }
 
         protected override void Dispose(bool disposing)
