@@ -236,11 +236,12 @@ namespace GlassData.DataModel
             }
         }
 
-        public Order GetOrderWithCustomer(int id)
+        public Order GetOrderWithCustomerAndGlasses(int id)
         {
             using (var context = new GlassContext())
             {
                 return context.OrderSet.AsNoTracking()
+                    .Include(o => o.GlassesList)
                     .Include(o => o.Customer)
                     .FirstOrDefault(o => o.Id == id);
             }

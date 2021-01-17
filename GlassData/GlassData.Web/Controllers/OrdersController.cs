@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using GlassData.DataLibrary.Models;
 using GlassData.DataModel;
+using static GlassData.Web.Converter.ModelConverter;
 using GlassData.Web.ViewModels;
 
 namespace GlassData.Web.Controllers
@@ -19,6 +20,8 @@ namespace GlassData.Web.Controllers
         private DisconnectedRepository _repo = new DisconnectedRepository();
 
         private OrdersViewModel ordersViewModel = new OrdersViewModel();
+
+        //private OrderViewModel orderViewModel = new OrderViewModel();
 
         // GET: Orders
         public ActionResult Index()
@@ -52,11 +55,14 @@ namespace GlassData.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = _repo.GetOrderWithCustomer(id.Value);
+            Order order = _repo.GetOrderWithCustomerAndGlasses(id.Value);
             if (order == null)
             {
                 return HttpNotFound();
             }
+
+
+
             return View(order);
         }
 
@@ -109,7 +115,8 @@ namespace GlassData.Web.Controllers
         // GET: Orders/Edit/5
         public ActionResult Edit(int? id)
         {
-            ViewBag.PreviousUrl = System.Web.HttpContext.Current.Request.UrlReferrer;
+            //orderViewModel.PreviousUrl = System.Web.HttpContext.Current.Request.UrlReferrer;
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -117,16 +124,23 @@ namespace GlassData.Web.Controllers
             #region ÊF6 Code
             //Order order = db.OrderSet.Find(id); 
             #endregion
-            var order = _repo.GetOrderById(id.Value);
+
+            var order = _repo.GetOrderWithCustomerAndGlasses(id.Value);
             if (order == null)
             {
                 return HttpNotFound();
             }
+
             #region EF6 Code
             //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId); 
             #endregion
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
-            return View(order);
+
+            OrderViewModel orderViewModel = ConvertToOrderViewModel(order);
+            orderViewModel.PreviousUrl = Request.UrlReferrer.ToString();
+
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", orderViewModel.CustomerId);
+
+            return View(orderViewModel);
         }
 
         // POST: Orders/Edit/5
@@ -134,7 +148,7 @@ namespace GlassData.Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Number,DateTime,CustomerId")] Order order)
+        public ActionResult Edit([Bind(Include = "Id,Number,DateTime,CustomerId,Customer,PreviousUrl")] OrderViewModel orderViewModel)
         {
             #region EF6 Code
             //if (ModelState.IsValid)
@@ -146,18 +160,14 @@ namespace GlassData.Web.Controllers
             //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name", order.CustomerId); 
             #endregion
 
-            if (ViewBag.PreviousUrl != null)
-            {
-                string x = ViewBag.PreviousUrl;
-            }
-
             if (ModelState.IsValid)
             {
+                Order order = ConvertToOrderModel(orderViewModel);
                 _repo.SaveUpdatedOrder(order);
             }
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", order.CustomerId);
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", orderViewModel.CustomerId);
             //return View(order);
-            return Redirect(Request.UrlReferrer.ToString());
+            return Redirect(orderViewModel.PreviousUrl);
         }
 
         // GET: Orders/Delete/5

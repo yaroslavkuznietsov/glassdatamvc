@@ -182,6 +182,7 @@
       <DependentUpon>202010231536052_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Converter\ModelConverter.cs" />
     <Compile Include="ViewModels\CustomersViewModel.cs" />
     <Compile Include="ViewModels\DataFilterModel.cs" />
     <Compile Include="ViewModels\GlassesViewModel.cs" />
