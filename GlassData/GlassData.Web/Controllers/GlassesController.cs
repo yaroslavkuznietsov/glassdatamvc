@@ -92,7 +92,7 @@ namespace GlassData.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var glass = _repo.GetGlassWithOrderCustomer(id.Value);
+            var glass = _repo.GetGlassWithOrder(id.Value);
             if (glass == null)
             {
                 return HttpNotFound();
@@ -149,8 +149,8 @@ namespace GlassData.Web.Controllers
             //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
             #endregion
 
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+            //ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.OrderId);
             return View(glass);
         }
 
@@ -162,7 +162,7 @@ namespace GlassData.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Glass glass = _repo.GetGlassWithOrderCustomer(id.Value);
+            Glass glass = _repo.GetGlassWithOrder(id.Value);
             if (glass == null)
             {
                 return HttpNotFound();
@@ -173,8 +173,10 @@ namespace GlassData.Web.Controllers
             //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
             #endregion
 
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+            //ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.OrderId);
+
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
 
             return View(glass);
         }
@@ -185,7 +187,7 @@ namespace GlassData.Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TimeStamp,LinePos,SourcePos,SourceSide,GlassId,GlassHeight,GlassWidth,GlassThickness,GlassWeight,DestRackPos,DestRackSide,PreviousHeight,PreviousWidth,GlassResult,OrderId,CustomerId")] Glass glass)
+        public ActionResult Edit([Bind(Include = "Id,TimeStamp,LinePos,SourcePos,SourceSide,GlassId,GlassHeight,GlassWidth,GlassThickness,GlassWeight,DestRackPos,DestRackSide,PreviousHeight,PreviousWidth,GlassResult,OrderId,CustomerId")] Glass glass, string returnUrl)
         {
             #region EF6 Code
             //if (ModelState.IsValid)
@@ -202,7 +204,10 @@ namespace GlassData.Web.Controllers
             if (ModelState.IsValid)
             {
                 _repo.SaveUpdatedGlass(glass);
-                return RedirectToAction("Index");
+                TempData["Success"] = "Added Successfully!";
+
+                //return Redirect(returnUrl);
+                //return RedirectToAction("Index");
             }
 
             #region EF6 Code
@@ -210,8 +215,8 @@ namespace GlassData.Web.Controllers
             //ViewBag.OrderId = new SelectList(db.OrderSet, "Id", "Number", glass.OrderId); 
             #endregion
 
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
-            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.CustomerId);
+            //ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", glass.CustomerId);
+            ViewBag.OrderId = new SelectList(_repo.GetOrderList(), "Id", "Number", glass.OrderId);
 
             return View(glass);
         }

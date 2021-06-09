@@ -24,7 +24,7 @@ namespace GlassData.DataModel
             using (var context = new GlassContext())
             {
                 context.Database.Log = message => Debug.WriteLine(message);
-                var linqQuery = context.GlassSet.Include(g => g.Customer).Include(g => g.Order);
+                var linqQuery = context.GlassSet.Include(g => g.Order);     //.Include(g => g.Customer)
                 if (!string.IsNullOrEmpty(query))
                 {
                     linqQuery = linqQuery.Where(g => g.GlassId.Contains(query));
@@ -49,37 +49,38 @@ namespace GlassData.DataModel
             }
         }
 
-        public List<Glass> GetGlassesWithCustomer()
-        {
-            using (var context = new GlassContext())
-            {
-                //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
-                return context.GlassSet.AsNoTracking()
-                    .Include(g => g.Customer).ToList();
-            }
-        }
+        //public List<Glass> GetGlassesWithCustomer()
+        //{
+        //    using (var context = new GlassContext())
+        //    {
+        //        //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
+        //        return context.GlassSet.AsNoTracking()
+        //            .Include(g => g.Customer).ToList();
+        //    }
+        //}
 
-        public List<Glass> GetGlassesWithOrderCustomer()
-        {
-            using (var context = new GlassContext())
-            {
-                //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
-                return context.GlassSet.AsNoTracking()
-                    .Include(g => g.Customer)
-                    .Include(g => g.Order).ToList();
-            }
-        }
+        //public List<Glass> GetGlassesWithOrderCustomer()
+        //{
+        //    using (var context = new GlassContext())
+        //    {
+        //        //return context.GlassSet.Include(g => g.Customer).Include(g => g.Order).ToList();
+        //        return context.GlassSet.AsNoTracking()
+        //            .Include(g => g.Customer)
+        //            .Include(g => g.Order).ToList();
+        //    }
+        //}
 
-        public Glass GetGlassWithOrderCustomer(int id)
+
+        public Glass GetGlassWithOrder(int id)
         {
             using (var context = new GlassContext())
             {
                 return context.GlassSet.AsNoTracking()
-                    .Include(g => g.Customer)
                     .Include(g => g.Order)
-                    .FirstOrDefault(g => g.Id == id);
+                    .FirstOrDefault(g => g.Id == id);       //.Include(g => g.Customer)
             }
         }
+
 
         public Glass GetGlassById(int id)
         {
@@ -119,6 +120,8 @@ namespace GlassData.DataModel
             }
         }
 
+
+
         public IEnumerable GetCustomerList()
         {
             using (var context = new GlassContext())
@@ -144,6 +147,8 @@ namespace GlassData.DataModel
         /// Customer
         /// </summary>
         /// <returns></returns>
+        /// 
+        #region  Customer
         public List<Customer> GetCustomersWithOrders()
         {
             using (var context = new GlassContext())
@@ -164,7 +169,7 @@ namespace GlassData.DataModel
             }
         }
 
-        public void SaveUpdatedCustomer (Customer customer)
+        public void SaveUpdatedCustomer(Customer customer)
         {
             using (var context = new GlassContext())
             {
@@ -200,12 +205,14 @@ namespace GlassData.DataModel
                 context.SaveChanges();
             }
         }
+        #endregion
 
 
         /// <summary>
         /// Order
         /// </summary>
         /// <returns></returns>
+        #region Order
         public List<Order> GetOrdersWithCustomers()
         {
             using (var context = new GlassContext())
@@ -274,6 +281,7 @@ namespace GlassData.DataModel
                 context.Entry(order).State = EntityState.Deleted;
                 context.SaveChanges();
             }
-        }
+        } 
+        #endregion
     }
 }

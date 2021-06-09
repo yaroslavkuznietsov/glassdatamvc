@@ -67,13 +67,9 @@ namespace GlassData.Web.Controllers
         }
 
         // GET: Orders/Create
-        public ActionResult Create(int customerId, string customerName)
+        public ActionResult Create()
         {
-            ViewBag.CustomerId = customerId;
-            ViewBag.CustomerName = customerName;
-
-            
-            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name", customerId);
+            ViewBag.CustomerId = new SelectList(_repo.GetCustomerList(), "Id", "Name");
 
             #region EF6 Code
             //ViewBag.CustomerId = new SelectList(db.CustomerSet, "Id", "Name"); 
